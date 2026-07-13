@@ -1,0 +1,5 @@
+# Local ingestion only. Not installed on the deployed server, which never
+# touches Google Drive.
+-r requirements.txt
+google-api-python-client==2.164.0
+google-auth==2.38.0
