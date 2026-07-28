@@ -1,4 +1,4 @@
-# Ask Your Drive — a ChatGPT connector for your own documents
+# Ask Your Drive: a ChatGPT connector for your own documents
 
 Connect a Google Drive folder to ChatGPT and ask questions about it. Answers come
 back grounded in your documents, with the source named, and "I don't know" when
