@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from fastmcp import FastMCP
 from openai import OpenAI
 from supabase import create_client
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 load_dotenv()
 
@@ -68,6 +70,19 @@ def fetch(id: str) -> dict:
         "url": row.get("file_url") or "",
         "metadata": {"chunk_index": row["chunk_index"], "file_id": row["file_id"]},
     }
+
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health(request: Request) -> JSONResponse:
+    """Runs one tiny Supabase read. Two jobs: it proves the DB path is live so
+    UptimeRobot can alert on a real failure, and the steady traffic keeps the
+    free-tier Supabase project from idling into an auto-pause (a paused project
+    stops resolving, which took the whole demo down once)."""
+    try:
+        supabase.table("research_chunks").select("id").limit(1).execute()
+        return JSONResponse({"ok": True})
+    except Exception as e:
+        return JSONResponse({"ok": False, "error": str(e)}, status_code=503)
 
 
 if __name__ == "__main__":
